@@ -20,7 +20,12 @@ class User < ApplicationRecord
   has_many :subs,
     primary_key: :id, 
     foreign_key: :moderator_id,
-    class_name: :Sub 
+    class_name: :Sub
+
+  has_many :posts
+    primary_key: :id,
+    foreign_key: :author_id
+    class_name: :Post
   
   def self.find_by_credentials(un, pw)
     user = User.find_by(username: un)
