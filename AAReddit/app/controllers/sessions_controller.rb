@@ -1,4 +1,7 @@
 class SessionsController < ApplicationController
+  before_action :require_logout, except: :destroy
+  before_action :require_login, only: :destroy
+  
   def new
     render :new
   end

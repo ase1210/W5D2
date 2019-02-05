@@ -1,6 +1,7 @@
 class SubsController < ApplicationController
   before_action :require_login
-  
+  before_action :is_sub_owner?, only: :edit
+
   def new
     @sub = Sub.new
     render :new
@@ -34,15 +35,13 @@ class SubsController < ApplicationController
   end
 
   def update
-    @sub = current_user.subs.find(params[:id])
-    # @sub = Sub.find(params[:id])
+    @sub = Sub.find(params[:id])
 
-    # if @sub.moderator_id == current_user.id && @sub.update_attributes(sub_params)
-    if @sub.update_attributes(sub_params)
+    if @sub.moderator_id == current_user.id && @sub.update_attributes(sub_params)
       redirect_to sub_url(@sub)
     else
-      flash.now[:errors] = @sub.errors.full_messages
-      render :edit
+      flash[:errors] = ["You cannot edit this sub"]
+      redirect_to sub_url(@sub)
     end
   end
 
@@ -52,4 +51,9 @@ class SubsController < ApplicationController
     params.require(:sub).permit(:title, :description)
   end
   
+  def is_sub_owner?
+    @sub = Sub.find(params[:id])
+    flash[:errors] = ["You cannot edit this sub"]
+    redirect_to sub_url(@sub) unless current_user.id == @sub.moderator_id
+  end
 end

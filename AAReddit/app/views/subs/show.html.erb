@@ -1,3 +1,10 @@
-<h2><%= @sub.title %></h2>
-<h4><%= @sub.description %></h4>
+<h2>Title: <%= @sub.title %></h2>
+
+<% if current_user.id == @sub.moderator_id %>
+<form action="<%= edit_sub_url(@sub) %>" method="get">
+  <input type="submit" value="Edit Your Sub">
+</form>
+<% end %>
+
+<h4>Description: <%= @sub.description %></h4>
 

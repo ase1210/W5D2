@@ -25,4 +25,14 @@ class ApplicationController < ActionController::Base
     redirect_to new_session_url unless current_user
   end
 
+  def require_logout
+    redirect_to subs_url if current_user
+  end
+
+  def is_sub_owner?
+    @sub = Sub.find(params[:id])
+    flash[:errors] = ["You cannot edit this sub"]
+    redirect_to sub_url(@sub) unless current_user.id == @sub.moderator_id
+  end
+  
 end
